@@ -11,6 +11,7 @@ import NetworkForm from "./network-form.js";
 import AuthForm from "./auth-form.js";
 import RegisterForm from "./register-form.js";
 import VerifyForm from "./verify-form.js";
+import SettingsForm from "./settings-form.js";
 import Composer from "./composer.js";
 import ScrollManager from "./scroll-manager.js";
 import Dialog from "./dialog.js";
@@ -220,6 +221,7 @@ export default class App extends Component {
 		this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
 		this.handleVerifyClick = this.handleVerifyClick.bind(this);
 		this.handleVerifySubmit = this.handleVerifySubmit.bind(this);
+		this.handleOpenSettingsClick = this.handleOpenSettingsClick.bind(this);
 
 		this.bufferStore = new store.Buffer();
 
@@ -1658,6 +1660,10 @@ export default class App extends Component {
 		this.dismissDialog();
 	}
 
+	handleOpenSettingsClick() {
+		this.openDialog("settings");
+	}
+
 	componentDidMount() {
 		setupKeybindings(this);
 	}
@@ -1714,6 +1720,7 @@ export default class App extends Component {
 						onReconnect=${() => this.reconnect()}
 						onAddNetwork=${this.handleAddNetworkClick}
 						onManageNetwork=${() => this.handleManageNetworkClick(activeBuffer.server)}
+						onOpenSettings=${this.handleOpenSettingsClick}
 					/>
 				</section>
 			`;
@@ -1819,6 +1826,16 @@ export default class App extends Component {
 			dialog = html`
 				<${Dialog} title="Verify ${getServerName(activeServer, activeBouncerNetwork)} account" onDismiss=${this.dismissDialog}>
 					${dialogBody}
+				</>
+			`;
+			break;
+		case "settings":
+			dialog = html`
+				<${Dialog} title="Settings" onDismiss=${this.dismissDialog}>
+					<${SettingsForm}
+						client=${client}
+						onSubmit=${this.handleSettingsSubmit}
+					/>
 				</>
 			`;
 			break;
